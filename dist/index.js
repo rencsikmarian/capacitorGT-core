@@ -111,9 +111,7 @@ const createCapacitor = (win) => {
      */
     const capPlatforms = win.CapacitorPlatforms;
     const defaultGetPlatform = () => {
-        return capCustomPlatform !== null
-            ? capCustomPlatform.name
-            : getPlatformId(win);
+        return capCustomPlatform !== null ? capCustomPlatform.name : getPlatformId(win);
     };
     const getPlatform = ((_a = capPlatforms === null || capPlatforms === void 0 ? void 0 : capPlatforms.currentPlatform) === null || _a === void 0 ? void 0 : _a.getPlatform) || defaultGetPlatform;
     const defaultIsNativePlatform = () => getPlatform() !== 'web';
@@ -130,9 +128,8 @@ const createCapacitor = (win) => {
         }
         return false;
     };
-    const isPluginAvailable = ((_c = capPlatforms === null || capPlatforms === void 0 ? void 0 : capPlatforms.currentPlatform) === null || _c === void 0 ? void 0 : _c.isPluginAvailable) ||
-        defaultIsPluginAvailable;
-    const defaultGetPluginHeader = (pluginName) => { var _a; return (_a = cap.PluginHeaders) === null || _a === void 0 ? void 0 : _a.find(h => h.name === pluginName); };
+    const isPluginAvailable = ((_c = capPlatforms === null || capPlatforms === void 0 ? void 0 : capPlatforms.currentPlatform) === null || _c === void 0 ? void 0 : _c.isPluginAvailable) || defaultIsPluginAvailable;
+    const defaultGetPluginHeader = (pluginName) => { var _a; return (_a = cap.PluginHeaders) === null || _a === void 0 ? void 0 : _a.find((h) => h.name === pluginName); };
     const getPluginHeader = ((_d = capPlatforms === null || capPlatforms === void 0 ? void 0 : capPlatforms.currentPlatform) === null || _d === void 0 ? void 0 : _d.getPluginHeader) || defaultGetPluginHeader;
     const handleError = (err) => win.console.error(err);
     const pluginMethodNoop = (_target, prop, pluginName) => {
@@ -155,9 +152,7 @@ const createCapacitor = (win) => {
                         ? (jsImplementation = await jsImplementations[platform]())
                         : (jsImplementation = jsImplementations[platform]);
             }
-            else if (capCustomPlatform !== null &&
-                !jsImplementation &&
-                'web' in jsImplementations) {
+            else if (capCustomPlatform !== null && !jsImplementation && 'web' in jsImplementations) {
                 jsImplementation =
                     typeof jsImplementations['web'] === 'function'
                         ? (jsImplementation = await jsImplementations['web']())
@@ -168,7 +163,7 @@ const createCapacitor = (win) => {
         const createPluginMethod = (impl, prop) => {
             var _a, _b;
             if (pluginHeader) {
-                const methodHeader = pluginHeader === null || pluginHeader === void 0 ? void 0 : pluginHeader.methods.find(m => prop === m.name);
+                const methodHeader = pluginHeader === null || pluginHeader === void 0 ? void 0 : pluginHeader.methods.find((m) => prop === m.name);
                 if (methodHeader) {
                     if (methodHeader.rtype === 'promise') {
                         return (options) => cap.nativePromise(pluginName, prop.toString(), options);
@@ -191,7 +186,7 @@ const createCapacitor = (win) => {
         const createPluginMethodWrapper = (prop) => {
             let remove;
             const wrapper = (...args) => {
-                const p = loadPluginImplementation().then(impl => {
+                const p = loadPluginImplementation().then((impl) => {
                     const fn = createPluginMethod(impl, prop);
                     if (fn) {
                         const p = fn(...args);
@@ -227,7 +222,7 @@ const createCapacitor = (win) => {
                     callbackId,
                 }, callback);
             };
-            const p = new Promise(resolve => call.then(() => resolve({ remove })));
+            const p = new Promise((resolve) => call.then(() => resolve({ remove })));
             p.remove = async () => {
                 console.warn(`Using addListener() without 'await' is deprecated.`);
                 await remove();
@@ -255,17 +250,14 @@ const createCapacitor = (win) => {
         registeredPlugins.set(pluginName, {
             name: pluginName,
             proxy,
-            platforms: new Set([
-                ...Object.keys(jsImplementations),
-                ...(pluginHeader ? [platform] : []),
-            ]),
+            platforms: new Set([...Object.keys(jsImplementations), ...(pluginHeader ? [platform] : [])]),
         });
         return proxy;
     };
     const registerPlugin = ((_e = capPlatforms === null || capPlatforms === void 0 ? void 0 : capPlatforms.currentPlatform) === null || _e === void 0 ? void 0 : _e.registerPlugin) || defaultRegisterPlugin;
     // Add in convertFileSrc for web, it will already be available in native context
     if (!cap.convertFileSrc) {
-        cap.convertFileSrc = filePath => filePath;
+        cap.convertFileSrc = (filePath) => filePath;
     }
     cap.getPlatform = getPlatform;
     cap.handleError = handleError;
@@ -276,9 +268,6 @@ const createCapacitor = (win) => {
     cap.Exception = CapacitorException;
     cap.DEBUG = !!cap.DEBUG;
     cap.isLoggingEnabled = !!cap.isLoggingEnabled;
-    // Deprecated props
-    cap.platform = cap.getPlatform();
-    cap.isNative = cap.isNativePlatform();
     return cap;
 };
 const initCapacitorGlobal = (win) => (win.Capacitor = createCapacitor(win));
@@ -367,7 +356,7 @@ class WebPlugin {
             }
             return;
         }
-        listeners.forEach(listener => listener(data));
+        listeners.forEach((listener) => listener(data));
     }
     hasListeners(eventName) {
         return !!this.listeners[eventName].length;
@@ -377,7 +366,7 @@ class WebPlugin {
             registered: false,
             windowEventName,
             pluginEventName,
-            handler: event => {
+            handler: (event) => {
                 this.notifyListeners(pluginEventName, event);
             },
         };
@@ -418,7 +407,7 @@ class WebPlugin {
             return;
         }
         delete this.retainedEventArguments[eventName];
-        args.forEach(arg => {
+        args.forEach((arg) => {
             this.notifyListeners(eventName, arg);
         });
     }
@@ -443,7 +432,7 @@ class CapacitorCookiesPluginWeb extends WebPlugin {
     async getCookies() {
         const cookies = document.cookie;
         const cookieMap = {};
-        cookies.split(';').forEach(cookie => {
+        cookies.split(';').forEach((cookie) => {
             if (cookie.length <= 0)
                 return;
             // Replace first "=" with CAP_COOKIE to prevent splitting on additional "="
@@ -462,9 +451,7 @@ class CapacitorCookiesPluginWeb extends WebPlugin {
             // Clean & sanitize options
             const expires = `; expires=${(options.expires || '').replace('expires=', '')}`; // Default is "; expires="
             const path = (options.path || '/').replace('path=', ''); // Default is "path=/"
-            const domain = options.url != null && options.url.length > 0
-                ? `domain=${options.url}`
-                : '';
+            const domain = options.url != null && options.url.length > 0 ? `domain=${options.url}` : '';
             document.cookie = `${encodedKey}=${encodedValue || ''}${expires}; path=${path}; ${domain};`;
         }
         catch (error) {
@@ -483,9 +470,7 @@ class CapacitorCookiesPluginWeb extends WebPlugin {
         try {
             const cookies = document.cookie.split(';') || [];
             for (const cookie of cookies) {
-                document.cookie = cookie
-                    .replace(/^ +/, '')
-                    .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
+                document.cookie = cookie.replace(/^ +/, '').replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
             }
         }
         catch (error) {
@@ -514,9 +499,7 @@ const readBlobAsBase64 = async (blob) => new Promise((resolve, reject) => {
     reader.onload = () => {
         const base64String = reader.result;
         // remove prefix "data:application/pdf;base64,"
-        resolve(base64String.indexOf(',') >= 0
-            ? base64String.split(',')[1]
-            : base64String);
+        resolve(base64String.indexOf(',') >= 0 ? base64String.split(',')[1] : base64String);
     };
     reader.onerror = (error) => reject(error);
     reader.readAsDataURL(blob);
@@ -527,7 +510,7 @@ const readBlobAsBase64 = async (blob) => new Promise((resolve, reject) => {
  */
 const normalizeHttpHeaders = (headers = {}) => {
     const originalKeys = Object.keys(headers);
-    const loweredKeys = Object.keys(headers).map(k => k.toLocaleLowerCase());
+    const loweredKeys = Object.keys(headers).map((k) => k.toLocaleLowerCase());
     const normalized = loweredKeys.reduce((acc, key, index) => {
         acc[key] = headers[originalKeys[index]];
         return acc;
@@ -548,7 +531,7 @@ const buildUrlParams = (params, shouldEncode = true) => {
         let item;
         if (Array.isArray(value)) {
             item = '';
-            value.forEach(str => {
+            value.forEach((str) => {
                 encodedValue = shouldEncode ? encodeURIComponent(str) : str;
                 item += `${key}=${encodedValue}&`;
             });
@@ -586,8 +569,7 @@ const buildRequestInit = (options, extra = {}) => {
         }
         output.body = params.toString();
     }
-    else if (type.includes('multipart/form-data') ||
-        options.data instanceof FormData) {
+    else if (type.includes('multipart/form-data') || options.data instanceof FormData) {
         const form = new FormData();
         if (options.data instanceof FormData) {
             options.data.forEach((value, key) => {
@@ -604,8 +586,7 @@ const buildRequestInit = (options, extra = {}) => {
         headers.delete('content-type'); // content-type will be set by `window.fetch` to includy boundary
         output.headers = headers;
     }
-    else if (type.includes('application/json') ||
-        typeof options.data === 'object') {
+    else if (type.includes('application/json') || typeof options.data === 'object') {
         output.body = JSON.stringify(options.data);
     }
     return output;
